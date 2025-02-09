@@ -36,8 +36,8 @@ class RepLayer(keras.layers.Layer):
 class SITE(keras.Model):
     def __init__(self, config, activation=tf.nn.relu):
         super(SITE, self).__init__()
-        
         print("Initialization ...")
+        
         self.rep_layers = []
         self.gnn_layers = []
         self.out_T_layers = []
