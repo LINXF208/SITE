@@ -197,7 +197,7 @@ def split_train_val_test(data, train_ratio, val_ratio, test_ratio,seed=42):
     val_indices = shuffled_indices[train_set_size:train_set_size+val_set_size]
     test_indices = shuffled_indices[train_set_size+val_set_size:]
     
-    return train_indices,val_indices,test_indices
+    return train_indices, val_indices, test_indices
 
 
 def normalize_adj(mx):
@@ -263,7 +263,7 @@ def train(
     count = 0
 
     for i in range(max_iterations):
-        print("iter",i)
+        print("iter", i)
         batch_indices = random.sample(range(0, len(train_indices)), config_hyperparameters['use_batch'])
 
         batch_input = tf.cast(np.array(train_input)[batch_indices], tf.float32)
@@ -274,8 +274,8 @@ def train(
 
         train_loss = cur_model.val_y(train_input, agg_features_train, train_yf)
         val_loss = cur_model.val_y(val_input, agg_features_val, val_yf)
-        print("train loss",train_loss)
-        print("val loss",val_loss)
+        print("train loss", train_loss)
+        print("val loss", val_loss)
 
         sum_loss += train_loss
         sum_val_loss += val_loss
@@ -364,7 +364,7 @@ def implement(config, data_name, model_name, activation):
     all_ite_true = y1 - y0
 
     # Spilt train/val/test sets.
-    train_indices,val_indices,test_indices = split_train_val_test(x, 0.7, 0.15, 0.15)
+    train_indices, val_indices, test_indices = split_train_val_test(x, 0.7, 0.15, 0.15)
 
     # Compture L
     init_adj_plus_I = ((adj > 0) + 0.0).T + np.eye(adj.shape[0])
@@ -401,18 +401,18 @@ def implement(config, data_name, model_name, activation):
     for cur_i in range(10):
         # Train and revalute model with ten runs.
         cur_model = train(
-                        model_name,
-                        train_input,
-                        agg_features_train,
-                        train_yf,
-                        val_input,
-                        agg_features_val,
-                        val_yf,
-                        config,config["iterations"],
-                        train_indices,
-                        config["flag_early_stop"],
-                        activation=activation
-                        )
+            model_name,
+            train_input,
+            agg_features_train,
+            train_yf,
+            val_input,
+            agg_features_val,
+            val_yf,
+            config,config["iterations"],
+            train_indices,
+            config["flag_early_stop"],
+            activation=activation
+        )
 
         cur_save_model_name = "model"
         cur_save_path = './save_Models/data_' + data_name + "_" + str(model_name)[8:-2] + "_repeat_" + str(cur_i)
