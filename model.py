@@ -3,9 +3,10 @@ warnings.filterwarnings('ignore')
 
 from tensorflow import keras
 import tensorflow as tf
+import numpy as np
 
 import utils
-import numpy as np
+
 
 
 class RepLayer(keras.layers.Layer):
