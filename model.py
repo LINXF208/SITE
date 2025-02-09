@@ -8,7 +8,6 @@ import numpy as np
 import utils
 
 
-
 class RepLayer(keras.layers.Layer):
     def __init__(self, num_outputs, activation=tf.nn.relu, reg=0.0):
         super(RepLayer, self).__init__()
@@ -186,7 +185,7 @@ class SITE(keras.Model):
         for i in range(len(self.gnn_layers)):
             GNN = self.gnn_layers[i](GNN)
 
-        concated_data = tf.concat([hidden, GNN],axis = 1)
+        concated_data = tf.concat([hidden, GNN], axis = 1)
         group_t, group_c, i_0, i_1= utils.divide_t_c(concated_data, input_t)
         
         outnn_T = group_t
@@ -199,7 +198,7 @@ class SITE(keras.Model):
             outnn_C = self.out_C_layers[i](outnn_C)
         output_C = self.final_out_y0(outnn_C)
         
-        y_pre = tf.dynamic_stitch([i_0, i_1],[output_C, output_T])
+        y_pre = tf.dynamic_stitch([i_0, i_1], [output_C, output_T])
         
         pred_error = tf.reduce_mean(tf.square(train_y - y_pre))
 
@@ -218,7 +217,7 @@ class SITE(keras.Model):
             GNN = self.gnn_layers[i](GNN)
 
         concated_data = tf.concat([hidden, GNN], axis=1)
-        group_t,group_c=concated_data,concated_data
+        group_t, group_c=concated_data, concated_data
 
         outnn_T = group_t
         for i in range(len(self.out_T_layers)):
