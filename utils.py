@@ -228,7 +228,7 @@ def train(
         val_input,
         agg_features_val,
         val_yf,
-        config_hyperparameters, 
+        config, 
         max_iterations,
         train_indices, 
         flag_early_stop=False, 
@@ -245,7 +245,7 @@ def train(
         val_input (np.array): Input data of units in the validation set.
         agg_features_val (np.array): Aggregated validation features.
         val_yf (np.array): Factual outcomes of validation units.
-        config_hyperparameters (dict): Model hyperparameters.
+        config (dict): Model hyperparameters.
         max_iterations (int): Maximum number of training iterations.
         train_indices (list or np.array): Indices for training data.
         flag_early_stop (bool): Whether to enable early stopping.
@@ -254,7 +254,7 @@ def train(
     Returns:
         tf.keras.Model: The trained model.
     """
-    cur_model = model_name(config_hyperparameters,activation=activation) 
+    cur_model = model_name(config, activation=activation) 
 
     losslist = []
     loss_list_val = []
@@ -264,7 +264,7 @@ def train(
 
     for i in range(max_iterations):
         print("iter", i)
-        batch_indices = random.sample(range(0, len(train_indices)), config_hyperparameters['use_batch'])
+        batch_indices = random.sample(range(0, len(train_indices)), config['use_batch'])
 
         batch_input = tf.cast(np.array(train_input)[batch_indices], tf.float32)
         batch_y = tf.cast(np.array(train_yf)[batch_indices], tf.float32)
@@ -317,7 +317,7 @@ def save_my_model(save_path, save_name, need_save_model):
     print("Already saved the model's weights in file" + path)
 
 
-def load_my_model(load_path, load_name, need_load_model, config_hyperparameters, activation):
+def load_my_model(load_path, load_name, need_load_model, config, activation):
     """
     Load a saved model from a specified path.
 
@@ -325,13 +325,13 @@ def load_my_model(load_path, load_name, need_load_model, config_hyperparameters,
         load_path (str): Directory where the model is saved.
         load_name (str): Filename of the saved model.
         need_load_model (tf.keras.Model): Model class to instantiate.
-        config_hyperparameters (dict): Model configuration parameters.
+        config (dict): Model configuration parameters.
         activation (tf activation function): Activation function.
 
     Returns:
         tf.keras.Model: Loaded model instance.
     """
-    model = need_load_model(config_hyperparameters, activation)
+    model = need_load_model(config, activation)
 
     path = load_path + '/' + load_name
 
@@ -409,7 +409,8 @@ def implement(config, data_name, model_name, activation):
             val_input,
             agg_features_val,
             val_yf,
-            config,config["iterations"],
+            config,
+            config["iterations"],
             train_indices,
             config["flag_early_stop"],
             activation=activation
