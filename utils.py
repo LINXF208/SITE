@@ -311,10 +311,10 @@ def save_my_model(save_path, save_name, need_save_model):
     Returns:
         None
     """
-    cur_path = save_path + '/' + save_name
+    path = save_path + '/' + save_name
 
-    need_save_model.save_weights(cur_path)
-    print("Already saved the model's weights in file" + cur_path)
+    need_save_model.save_weights(path)
+    print("Already saved the model's weights in file" + path)
 
 
 def load_my_model(load_path, load_name, need_load_model, config_hyperparameters, activation):
@@ -331,14 +331,14 @@ def load_my_model(load_path, load_name, need_load_model, config_hyperparameters,
     Returns:
         tf.keras.Model: Loaded model instance.
     """
-    cur_model = need_load_model(config_hyperparameters, activation)
+    model = need_load_model(config_hyperparameters, activation)
 
-    cur_path = load_path + '/' + load_name
+    path = load_path + '/' + load_name
 
-    cur_model.load_weights(cur_path)
+    model.load_weights(path)
     print("Model successfully loaded.")
 
-    return cur_model
+    return model
 
 
 def implement(config, data_name, model_name, activation):
@@ -351,6 +351,7 @@ def implement(config, data_name, model_name, activation):
         model_name (class): Model class.
         activation (function): Activation function.
     """
+    
     # Load data.
     data = load_data(data_name)
     x, adj, all_t, all_yf, y1, y0 = data
@@ -378,15 +379,15 @@ def implement(config, data_name, model_name, activation):
 
     # ndarray -> tf.Tensor
     all_input_self = tf.cast(all_input_self, tf.float32)
-    cur_yf = tf.cast(all_yf, tf.float32)
+    all_yf = tf.cast(all_yf, tf.float32)
 
     train_input = tf.gather(all_input_self, train_indices)
     val_input = tf.gather(all_input_self, val_indices)
     test_input = tf.gather(all_input_self, test_indices)
 
-    train_yf = tf.gather(cur_yf, train_indices)
-    val_yf = tf.gather(cur_yf, val_indices)
-    test_yf = tf.gather(cur_yf, test_indices)
+    train_yf = tf.gather(all_yf, train_indices)
+    val_yf = tf.gather(all_yf, val_indices)
+    test_yf = tf.gather(all_yf, test_indices)
 
     agg_features_train = tf.gather(agg_features, train_indices)
     agg_features_val = tf.gather(agg_features, val_indices)
