@@ -264,6 +264,7 @@ def train(
 
     for i in range(max_iterations):
         print("iter", i)
+        
         batch_indices = random.sample(range(0, len(train_indices)), config['use_batch'])
 
         batch_input = tf.cast(np.array(train_input)[batch_indices], tf.float32)
