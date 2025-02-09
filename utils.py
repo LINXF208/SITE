@@ -372,10 +372,10 @@ def implement(config, data_name, model_name, activation):
     L = normalize_adj(init_adj_plus_I)
 
     # Aggregate interference-related information before training.
-    final_A = L
+    final_adj = L
     for i in range(config['k'] - 1):
-        final_A =  np.matmul(final_A, L) 
-    agg_features = np.matmul(final_A, np.array(all_input_self))
+        final_adj =  np.matmul(final_adj, L) 
+    agg_features = np.matmul(final_adj, np.array(all_input_self))
 
     # ndarray -> tf.Tensor
     all_input_self = tf.cast(all_input_self, tf.float32)
