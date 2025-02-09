@@ -299,7 +299,7 @@ def train(
     return cur_model
 
  
-def save_mymodel(save_path, save_name, need_save_model):
+def save_my_model(save_path, save_name, need_save_model):
     """
     Save the model weights to a specified path.
 
@@ -317,7 +317,7 @@ def save_mymodel(save_path, save_name, need_save_model):
     print("Already saved the model's weights in file" + cur_path)
 
 
-def load_mymodel(load_path, load_name, need_load_model, config_hyperparameters, activation):
+def load_my_model(load_path, load_name, need_load_model, config_hyperparameters, activation):
     """
     Load a saved model from a specified path.
 
@@ -416,7 +416,7 @@ def implement(config, data_name, model_name, activation):
 
         cur_save_model_name = "model"
         cur_save_path = './save_Models/data_' + data_name + "_" + str(model_name)[8:-2] + "_repeat_" + str(cur_i)
-        save_mymodel(cur_save_path, cur_save_model_name, cur_model)
+        save_my_model(cur_save_path, cur_save_model_name, cur_model)
 
         val_pehe, val_msey= evaluation.evaluate_msey_pehe(cur_model, val_input, agg_features_val, val_yf, val_ite_true)
         cur_val_results = [val_pehe, val_msey]
