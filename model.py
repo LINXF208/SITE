@@ -114,6 +114,7 @@ class SITE(keras.Model):
     def get_loss(self, input_tensor, aggreted_results, train_y, training=True):
         input_x = input_tensor[:, :-1]
         input_t = tf.constant(input_tensor[:, -1], shape=[input_x.shape[0], 1])
+        p = tf.divide(tf.reduce_sum(input_t), input_t.shape[0])
 
         regularization = 0
 
@@ -145,10 +146,7 @@ class SITE(keras.Model):
             outnn_C = tf.nn.dropout(outnn_C, self.out_dropout)
             regularization += tf.nn.l2_loss(self.out_C_layers[i].kernel)
         output_C = self.final_out_y0(outnn_C)
-
         y_pre = tf.dynamic_stitch([i_0, i_1], [output_C, output_T])
-
-        p = tf.divide(tf.reduce_sum(input_t), input_t.shape[0])
 
         pred_error = tf.reduce_mean(tf.square(train_y - y_pre))
    
