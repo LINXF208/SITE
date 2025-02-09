@@ -161,10 +161,11 @@ class SITE(keras.Model):
         )
         
         GNN_error = self.rep_alpha * tf.sqrt(
-            tf.clip_by_value(utils.mmd2_lin(GNN, input_t, p), 
-                             1e-10, 
-                             tf.cast(np.inf, tf.float32)
-                            )
+            tf.clip_by_value(
+                utils.mmd2_lin(GNN, input_t, p), 
+                1e-10, 
+                tf.cast(np.inf, tf.float32)
+            )
         )
 
         L_1 =   rep_error + pred_error + self.reg_lambda * regularization + GNN_error
