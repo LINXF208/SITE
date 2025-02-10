@@ -269,10 +269,9 @@ def train(
         batch_input = tf.cast(np.array(train_input)[batch_indices], tf.float32)
         batch_y = tf.cast(np.array(train_yf)[batch_indices], tf.float32)
         batch_agg = tf.cast(np.array(agg_features_train)[batch_indices], tf.float32)
-
-        total_loss = cur_model.network_learn(batch_input, batch_agg, batch_y)
-
+        
         train_loss = cur_model.val_y(train_input, agg_features_train, train_yf)
+        total_loss = cur_model.network_learn(batch_input, batch_agg, batch_y)
         val_loss = cur_model.val_y(val_input, agg_features_val, val_yf)
         print("train loss", train_loss)
         print("val loss", val_loss)
