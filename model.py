@@ -177,6 +177,7 @@ class SITE(keras.Model):
             tape.watch(self.variables)
             self.train_loss = self.get_loss(input_tensor, aggreted_results, y)
             g = tape.gradient(self.train_loss, self.variables)
+            
         return g
 
     def network_learn(self, input_tensor, aggreted_results, y):
