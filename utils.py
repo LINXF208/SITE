@@ -255,7 +255,7 @@ def train(
     """
     cur_model = model_name(config, activation=activation) 
 
-    losslist = []
+    loss_list = []
     loss_list_val = []
     sum_loss = 0
     sum_val_loss = 0
@@ -290,7 +290,7 @@ def train(
                     print("Early stopping triggered.")
                     break
 
-            losslist.append(sum_loss/20)
+            loss_list.append(sum_loss/20)
             loss_list_val.append(sum_val_loss/20)
 
             sum_loss = 0
