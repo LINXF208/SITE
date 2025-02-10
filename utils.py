@@ -108,7 +108,6 @@ def config_pare_SITE(
     Returns:
         dict: A dictionary containing all hyperparameters, i.e., config.
     """
-
     config = {
         # Parameters for Adam
         "lr_rate": lr_rate,
