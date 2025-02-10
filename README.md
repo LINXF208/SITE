@@ -10,7 +10,7 @@
 - seaborn==0.12.0
   
 Our experiments are performed by RTX A6000 GPU. In addition, you need to install cuDNN8.0 and CUDA11.0.
-# Implement
+# Implementation
 CUDA_VISIBLE_DEVICES=1 python main.py
 # Data
 Please download data with simulated outcomes in https://www.dropbox.com/scl/fi/4k5ra7h31oso95yoezj1j/data.zip?rlkey=zbkooznuvsctf6jbmyggyeff7&st=jqcr86cw&dl=0
