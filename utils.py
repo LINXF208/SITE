@@ -278,6 +278,7 @@ def train(
 
         sum_loss += train_loss
         sum_val_loss += val_loss
+        
         if (i+1) % 20 == 0:
             if len(loss_list_val) > 0 and sum_val_loss/20 >= loss_list_val[-1]:
                 count += 1
