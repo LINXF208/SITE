@@ -197,7 +197,7 @@ def split_train_val_test(data, train_ratio, val_ratio, test_ratio,seed=42):
     val_indices = shuffled_indices[train_set_size:train_set_size+val_set_size]
     test_indices = shuffled_indices[train_set_size+val_set_size:]
     
-    return train_indices,val_indices,test_indices
+    return train_indices, val_indices, test_indices
 
 
 def normalize_adj(mx):
@@ -228,7 +228,7 @@ def train(
         val_input,
         agg_features_val,
         val_yf,
-        config_hyperparameters, 
+        config, 
         max_iterations,
         train_indices, 
         flag_early_stop=False, 
@@ -245,7 +245,7 @@ def train(
         val_input (np.array): Input data of units in the validation set.
         agg_features_val (np.array): Aggregated validation features.
         val_yf (np.array): Factual outcomes of validation units.
-        config_hyperparameters (dict): Model hyperparameters.
+        config (dict): Model hyperparameters.
         max_iterations (int): Maximum number of training iterations.
         train_indices (list or np.array): Indices for training data.
         flag_early_stop (bool): Whether to enable early stopping.
@@ -254,7 +254,7 @@ def train(
     Returns:
         tf.keras.Model: The trained model.
     """
-    cur_model = model_name(config_hyperparameters,activation=activation) 
+    cur_model = model_name(config, activation=activation) 
 
     losslist = []
     loss_list_val = []
@@ -263,8 +263,9 @@ def train(
     count = 0
 
     for i in range(max_iterations):
-        print("iter",i)
-        batch_indices = random.sample(range(0, len(train_indices)), config_hyperparameters['use_batch'])
+        print("iter", i)
+        
+        batch_indices = random.sample(range(0, len(train_indices)), config['use_batch'])
 
         batch_input = tf.cast(np.array(train_input)[batch_indices], tf.float32)
         batch_y = tf.cast(np.array(train_yf)[batch_indices], tf.float32)
@@ -274,8 +275,8 @@ def train(
 
         train_loss = cur_model.val_y(train_input, agg_features_train, train_yf)
         val_loss = cur_model.val_y(val_input, agg_features_val, val_yf)
-        print("train loss",train_loss)
-        print("val loss",val_loss)
+        print("train loss", train_loss)
+        print("val loss", val_loss)
 
         sum_loss += train_loss
         sum_val_loss += val_loss
@@ -299,7 +300,7 @@ def train(
     return cur_model
 
  
-def save_mymodel(save_path, save_name, need_save_model):
+def save_my_model(save_path, save_name, need_save_model):
     """
     Save the model weights to a specified path.
 
@@ -311,13 +312,13 @@ def save_mymodel(save_path, save_name, need_save_model):
     Returns:
         None
     """
-    cur_path = save_path + '/' + save_name
+    path = save_path + '/' + save_name
 
-    need_save_model.save_weights(cur_path)
-    print("Already saved the model's weights in file" + cur_path)
+    need_save_model.save_weights(path)
+    print("Already saved the model's weights in file" + path)
 
 
-def load_mymodel(load_path, load_name, need_load_model, config_hyperparameters, activation):
+def load_my_model(load_path, load_name, need_load_model, config, activation):
     """
     Load a saved model from a specified path.
 
@@ -325,20 +326,20 @@ def load_mymodel(load_path, load_name, need_load_model, config_hyperparameters, 
         load_path (str): Directory where the model is saved.
         load_name (str): Filename of the saved model.
         need_load_model (tf.keras.Model): Model class to instantiate.
-        config_hyperparameters (dict): Model configuration parameters.
+        config (dict): Model configuration parameters.
         activation (tf activation function): Activation function.
 
     Returns:
         tf.keras.Model: Loaded model instance.
     """
-    cur_model = need_load_model(config_hyperparameters, activation)
+    model = need_load_model(config, activation)
 
-    cur_path = load_path + '/' + load_name
+    path = load_path + '/' + load_name
 
-    cur_model.load_weights(cur_path)
+    model.load_weights(path)
     print("Model successfully loaded.")
 
-    return cur_model
+    return model
 
 
 def implement(config, data_name, model_name, activation):
@@ -351,6 +352,7 @@ def implement(config, data_name, model_name, activation):
         model_name (class): Model class.
         activation (function): Activation function.
     """
+    
     # Load data.
     data = load_data(data_name)
     x, adj, all_t, all_yf, y1, y0 = data
@@ -364,29 +366,29 @@ def implement(config, data_name, model_name, activation):
     all_ite_true = y1 - y0
 
     # Spilt train/val/test sets.
-    train_indices,val_indices,test_indices = split_train_val_test(x, 0.7, 0.15, 0.15)
+    train_indices, val_indices, test_indices = split_train_val_test(x, 0.7, 0.15, 0.15)
 
     # Compture L
     init_adj_plus_I = ((adj > 0) + 0.0).T + np.eye(adj.shape[0])
     L = normalize_adj(init_adj_plus_I)
 
     # Aggregate interference-related information before training.
-    final_A = L
+    final_adj = L
     for i in range(config['k'] - 1):
-        final_A =  np.matmul(final_A, L) 
-    agg_features = np.matmul(final_A, np.array(all_input_self))
+        final_adj =  np.matmul(final_adj, L) 
+    agg_features = np.matmul(final_adj, np.array(all_input_self))
 
     # ndarray -> tf.Tensor
     all_input_self = tf.cast(all_input_self, tf.float32)
-    cur_yf = tf.cast(all_yf, tf.float32)
+    all_yf = tf.cast(all_yf, tf.float32)
 
     train_input = tf.gather(all_input_self, train_indices)
     val_input = tf.gather(all_input_self, val_indices)
     test_input = tf.gather(all_input_self, test_indices)
 
-    train_yf = tf.gather(cur_yf, train_indices)
-    val_yf = tf.gather(cur_yf, val_indices)
-    test_yf = tf.gather(cur_yf, test_indices)
+    train_yf = tf.gather(all_yf, train_indices)
+    val_yf = tf.gather(all_yf, val_indices)
+    test_yf = tf.gather(all_yf, test_indices)
 
     agg_features_train = tf.gather(agg_features, train_indices)
     agg_features_val = tf.gather(agg_features, val_indices)
@@ -401,31 +403,32 @@ def implement(config, data_name, model_name, activation):
     for cur_i in range(10):
         # Train and revalute model with ten runs.
         cur_model = train(
-                        model_name,
-                        train_input,
-                        agg_features_train,
-                        train_yf,
-                        val_input,
-                        agg_features_val,
-                        val_yf,
-                        config,config["iterations"],
-                        train_indices,
-                        config["flag_early_stop"],
-                        activation=activation
-                        )
+            model_name,
+            train_input,
+            agg_features_train,
+            train_yf,
+            val_input,
+            agg_features_val,
+            val_yf,
+            config,
+            config["iterations"],
+            train_indices,
+            config["flag_early_stop"],
+            activation=activation
+        )
 
         cur_save_model_name = "model"
         cur_save_path = './save_Models/data_' + data_name + "_" + str(model_name)[8:-2] + "_repeat_" + str(cur_i)
-        save_mymodel(cur_save_path, cur_save_model_name, cur_model)
+        save_my_model(cur_save_path, cur_save_model_name, cur_model)
 
         val_pehe, val_msey= evaluation.evaluate_msey_pehe(cur_model, val_input, agg_features_val, val_yf, val_ite_true)
         cur_val_results = [val_pehe, val_msey]
-        cur_val_results_name = './results/val_results_'+ data_name + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
+        cur_val_results_name = './results/val_results_' + data_name + "_" +  str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
         save_results(cur_val_results, cur_val_results_name)
 
         test_pehe, test_msey= evaluation.evaluate_msey_pehe(cur_model, test_input, agg_features_test, test_yf, test_ite_true)
         cur_test_results = [test_pehe, test_msey]
-        cur_test_results_name = './results/test_results_'+ data_name + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
+        cur_test_results_name = './results/test_results_' + data_name + "_" + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
         save_results(cur_test_results, cur_test_results_name)
 
 
