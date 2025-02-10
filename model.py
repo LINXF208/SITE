@@ -43,7 +43,8 @@ class SITE(keras.Model):
         self.gnn_layers = []
         self.out_T_layers = []
         self.out_C_layers = []
-
+        
+        self.train_loss = None
         self.activation = activation
         self.optimizer= keras.optimizers.Adam(lr=config['lr_rate'], decay=config['lr_dc'])
         self.use_batch = config['use_batch']
@@ -174,9 +175,8 @@ class SITE(keras.Model):
     def get_grad(self, input_tensor, aggreted_results, y):
         with tf.GradientTape() as tape:
             tape.watch(self.variables)
-            L = self.get_loss(input_tensor, aggreted_results, y)
-            g = tape.gradient(L, self.variables)
-
+            self.train_loss = self.get_loss(input_tensor, aggreted_results, y)
+            g = tape.gradient(self.train_loss, self.variables)
         return g
 
     def network_learn(self, input_tensor, aggreted_results, y):
