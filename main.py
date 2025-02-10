@@ -3,7 +3,6 @@ import math
 import numpy as np 
 import tensorflow as tf
 from tensorflow import keras
-import pandas as pd
 
 import model
 import utils
