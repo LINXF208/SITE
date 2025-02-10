@@ -423,12 +423,12 @@ def implement(config, data_name, model_name, activation):
 
         val_pehe, val_msey= evaluation.evaluate_msey_pehe(cur_model, val_input, agg_features_val, val_yf, val_ite_true)
         cur_val_results = [val_pehe, val_msey]
-        cur_val_results_name = './results/val_results_'+ data_name + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
+        cur_val_results_name = './results/val_results_' + data_name + "_" +  str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
         save_results(cur_val_results, cur_val_results_name)
 
         test_pehe, test_msey= evaluation.evaluate_msey_pehe(cur_model, test_input, agg_features_test, test_yf, test_ite_true)
         cur_test_results = [test_pehe, test_msey]
-        cur_test_results_name = './results/test_results_'+ data_name + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
+        cur_test_results_name = './results/test_results_' + data_name + "_" + str(model_name)[8:-2]+'_'+"reapted_" + str(cur_i)
         save_results(cur_test_results, cur_test_results_name)
 
 
