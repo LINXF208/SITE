@@ -27,7 +27,7 @@ def evaluate_msey_pehe(
     pred_y1, pred_y0 = trained_model(test_input, agg_features_test, False)
 
     pred_ITE = pred_y1 - pred_y0
-    pred_yf = Model.pre_yf(test_input, agg_features_test, False)
+    pred_yf = trained_model.pre_yf(test_input, agg_features_test, False)
 
     pehe = np.mean((pred_ITE - test_ITE) ** 2)
     msey = np.mean((pred_yf - test_yf) ** 2)
