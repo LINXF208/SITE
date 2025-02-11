@@ -30,6 +30,7 @@ class RepLayer(keras.layers.Layer):
     def call(self, features):
         output = tf.matmul(features, self.kernel) + self.bias
         output = self.activation(output)
+        
         return output
 
 
