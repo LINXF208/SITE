@@ -5,7 +5,7 @@ import model
 
 
 def evaluate_msey_pehe(
-        Model,
+        trained_model,
         test_input,
         agg_features_test,
         test_yf,
@@ -15,7 +15,7 @@ def evaluate_msey_pehe(
     Evaluate PEHE and MSE.
     
     Args:
-        model: Trained model instance.
+        trained_model: Trained model instance.
         test_input (ndarray): Features of units in the test set.
         agg_features_test (ndarray): Aggregated results of units in the test set.
         test_yf (ndarray): Factual outcomes of units in the test set.
@@ -24,7 +24,7 @@ def evaluate_msey_pehe(
     Returns:
         tuple: (PEHE, MSE)
     """
-    pred_y1, pred_y0 = Model(test_input, agg_features_test, False)
+    pred_y1, pred_y0 = trained_model(test_input, agg_features_test, False)
 
     pred_ITE = pred_y1 - pred_y0
     pred_yf = Model.pre_yf(test_input, agg_features_test, False)
