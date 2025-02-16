@@ -169,9 +169,9 @@ class SITE(keras.Model):
             )
         )
 
-        L_1 =   rep_error + pred_error + self.reg_lambda * regularization + GNN_error
+        L =   rep_error + pred_error + self.reg_lambda * regularization + GNN_error
 
-        return L_1
+        return L
     
     def get_grad(self, input_tensor, aggreted_results, y):
         with tf.GradientTape() as tape:
