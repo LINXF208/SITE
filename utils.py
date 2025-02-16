@@ -193,8 +193,8 @@ def split_train_val_test(data, train_ratio, val_ratio, test_ratio,seed=42):
     val_set_size = int(len(data) * val_ratio)
 
     train_indices = shuffled_indices[:train_set_size]
-    val_indices = shuffled_indices[train_set_size:train_set_size+val_set_size]
-    test_indices = shuffled_indices[train_set_size+val_set_size:]
+    val_indices = shuffled_indices[train_set_size:train_set_size + val_set_size]
+    test_indices = shuffled_indices[train_set_size + val_set_size:]
     
     return train_indices, val_indices, test_indices
 
