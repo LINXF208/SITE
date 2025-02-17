@@ -246,8 +246,3 @@ class SITE(keras.Model):
         output = input_t * output_T + (1 - input_t) * output_C
 
         return output
-            
-             
- 
-    
- 
